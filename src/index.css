@@ -1,0 +1,70 @@
+:root {
+  --main-yellow: #fdd835;
+  --main-blue: #1976d2;
+  --main-red: #d32f2f;
+  --main-white: #fffde7;
+}
+
+body {
+  background-color: var(--main-white);
+  font-family: 'Bangers', cursive;
+}
+
+.card {
+  min-width: 300px;
+  border: 3px solid var(--main-blue);
+  background-color: var(--main-yellow);
+  color: #000;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+img {
+  object-fit: cover;
+}
+
+.navbar {
+  background-color: var(--main-yellow) !important;
+  border-bottom: 3px solid var(--main-blue);
+}
+
+.navbar-brand {
+  font-family: 'Bangers', cursive;
+  font-size: 2rem;
+  color: #000 !important;
+}
+
+.btn-outline-primary {
+  border-color: var(--main-blue);
+  color: var(--main-blue);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--main-blue);
+  color: white;
+}
+
+.btn-outline-warning {
+  border-color: var(--main-red);
+  color: var(--main-red);
+}
+
+.btn-outline-warning:hover {
+  background-color: var(--main-red);
+  color: white;
+}
+
+.btn-warning {
+  background-color: var(--main-red);
+  border: none;
+  color: white;
+}
+
+h1, h2 {
+  font-family: 'Bangers', cursive;
+  color: var(--main-yellow);
+  text-shadow: 2px 2px var(--main-blue);
+}
