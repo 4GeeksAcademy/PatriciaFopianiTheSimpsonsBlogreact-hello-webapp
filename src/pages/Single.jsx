@@ -1,6 +1,7 @@
 // Import necessary hooks and components from react-router-dom and other libraries.
 import { Link, useParams, useLocation } from "react-router-dom";  // To use link for navigation, useParams to get URL parameters, and useLocation to detect the current route
 import PropTypes from "prop-types";  // To define prop types for this component
+import { useState, useEffect } from "react"; // <-- Nuevo: para manejar estado y efectos
 import useGlobalReducer from "../hooks/useGlobalReducer";  // Import a custom hook for accessing the global state
 
 // Define and export the Single component which displays individual item details.
@@ -18,17 +19,38 @@ export const Single = props => {
   const isLocation = location.pathname.includes("/location/");
 
   // Variable to store the selected item (character or location).
-  let item = null;
+  // let item = null;  <-- Esto se reemplaza por useState
+  const [item, setItem] = useState(null); // <-- Nuevo estado para guardar el detalle
 
-  // If the route corresponds to a character, search inside store.characters.
-  if (isCharacter) {
-    item = store.characters.find(character => character.id === parseInt(id));
-  }
+  // Nuevo: hacer una petición para pedir el detalle del personaje o locación cuando se monta el componente
+  useEffect(() => {
+    const fetchDetail = async () => {
+      try {
+        let url = "";
 
-  // If the route corresponds to a location, search inside store.locations.
-  if (isLocation) {
-    item = store.locations.find(loc => loc.id === parseInt(id));
-  }
+        // Si es personaje, pedimos su detalle
+        if (isCharacter) {
+          url = `https://thesimpsonsapi.com/api/characters/${id}`;
+        }
+
+        // Si es locación, pedimos su detalle
+        if (isLocation) {
+          url = `https://thesimpsonsapi.com/api/locations/${id}`;
+        }
+
+        const resp = await fetch(url);
+        const data = await resp.json();
+
+        // <-- Corrección: la API de locations devuelve un array
+        setItem(Array.isArray(data) ? data[0] : data); // Guardamos el detalle en el estado
+
+      } catch (error) {
+        console.error("Error fetching detail:", error);
+      }
+    };
+
+    fetchDetail();
+  }, [id, isCharacter, isLocation]);
 
   // If the item is not found yet (store still loading), show a loading message.
   if (!item) {
@@ -53,7 +75,7 @@ export const Single = props => {
 
       {isLocation && (
         <img
-          src={item.image}
+          src={`https://cdn.thesimpsonsapi.com/1280/location/${item.id}.webp`}
           alt={item.name}
           className="img-fluid mb-4"
           style={{ maxHeight: "400px", objectFit: "cover" }}
